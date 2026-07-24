@@ -3,8 +3,7 @@ setCps(161 / 60 / 4);
 // prettier-ignore
 samples('github:mot4i/garden');
 
-$pat: stack(
-  n("e3*8").mask("<0 0 0 0 0 0 0 0 0 0 1 1 >"),
+_$pat: stack(
   n("e3 e4 d4 e4 <a3 g3> <b3 e4> <c#4 f#3> <e4 e4>").mask(
     "<1 1 1 1 1 1 1 1 0 0 0 0  >",
   ),
@@ -20,8 +19,10 @@ $pat: stack(
 
 $voice: stack(
   n(
-    "< e4 - > b3 f#4 g4 <f#4/2 f#4 f#4/2 g4 f#4/2  f#4 f#4/2 f#4> - < - e4 - f#4 - e4> -",
-  ).mask("<1 1 1 1 1 1 1 1 0 0 0 0 >"),
+    "< e4 - > b3 f#4 g4 <f#4/2 f#4 f#4/2 g4 f#4/2 f#4 f#4/2 g4> - < - e4 - f#4 > -",
+  )
+    .rib(0, 12)
+    .mask("<1 1 1 1 1 1 1 1 0 0 0 0 >"),
   n("< e4 [ - - <g4 -> <f#4 ->]>").mask("<0 0 0 0 0 0 0 0 1 1 1 1 >"),
 )
   .scale("e:minor")
@@ -29,4 +30,16 @@ $voice: stack(
   .room(0.5)
   .sound("gm_voice_oohs");
 
-$drums: sound("bd:2 hh:2 sd:2 hh:2 bd:2 hh:2 sd:2 hh:2").bank("garden");
+$drums: sound("bd:7 hh:7 sd:7 hh:7 bd:7 hh:7 sd:7 hh:7")
+  .bank("garden")
+  .lpenv(2)
+  .gain(0.5);
+
+$drums: sound("-*6 sd:2 -*9").bank("garden").lpf(400).gain(0.3);
+
+$bass: n("e1 e1 -  e1 - - e2 -")
+  .scale("e:minor")
+  .s("gm_electric_bass_pick")
+  .room(2)
+  .lpf(900)
+  .bpenv("<4 2 1 0 -1 -2 -4>/4");

@@ -28,6 +28,7 @@ $voice: stack(
   .scale("e:minor")
   .distort("2.2:.3")
   .room(0.5)
+  .roomsize(4)
   .sound("gm_voice_oohs");
 
 $drums: sound("bd:7 hh:7 sd:7 hh:7 bd:7 hh:7 sd:7 hh:7")
@@ -35,7 +36,7 @@ $drums: sound("bd:7 hh:7 sd:7 hh:7 bd:7 hh:7 sd:7 hh:7")
   .lpenv(2)
   .gain(0.5);
 
-$drums: sound("-*6 sd:2 -*9").bank("garden").lpf(400).gain(0.3);
+$drums: sound("-*10 sd:5  -*12").bank("garden").lpf(400);
 
 $bass: n("e1 e1 -  e1 - - e2 -")
   .scale("e:minor")
@@ -43,3 +44,6 @@ $bass: n("e1 e1 -  e1 - - e2 -")
   .room(2)
   .lpf(900)
   .bpenv("<4 2 1 0 -1 -2 -4>/4");
+
+// Everything
+//all((x) => x.lpf(slider(1000, 0, 1000)));

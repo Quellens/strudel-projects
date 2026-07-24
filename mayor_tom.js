@@ -12,12 +12,12 @@ _$pat: stack(
   .scale("e:minor")
   .distort("2.2:.3")
   .s("saw")
-  .lpf(slider(456, 0, 800))
-  .lpenv(slider(1.575, 0, 5))
+  .lpf(slider(122.4, 0, 800))
+  .lpenv(slider(1.16, 0, 5))
   .room(0.4)
   .lpq(12);
 
-$voice: stack(
+_$voice: stack(
   n(
     "< e4 - > b3 f#4 g4 <f#4/2 f#4 f#4/2 g4 f#4/2 f#4 f#4/2 g4> - < - e4 - f#4 > -",
   )
@@ -31,19 +31,39 @@ $voice: stack(
   .roomsize(4)
   .sound("gm_voice_oohs");
 
-$drums: sound("bd:7 hh:7 sd:7 hh:7 bd:7 hh:7 sd:7 hh:7")
+_$drums: sound("bd:7 hh:7 sd:7 hh:7 bd:7 hh:7 sd:7 hh:7")
   .bank("garden")
-  .lpenv(2)
-  .gain(0.5);
+  .gain("[0.15 0.6]*4")
+  .lpenv(2);
 
-$drums: sound("-*10 sd:5  -*12").bank("garden").lpf(400);
+_$hehe: sound("-*10 sd:5  -*12").bank("garden").lpf(400).gain(0.2);
 
-$bass: n("e1 e1 -  e1 - - e2 -")
+_$bass: n("e1 e1 -  e1 - - e2 -")
   .scale("e:minor")
   .s("gm_electric_bass_pick")
-  .room(2)
+  .dec(0.9)
+  .room(0.6)
+  .roomsize(7)
   .lpf(900)
   .bpenv("<4 2 1 0 -1 -2 -4>/4");
 
+$refrain: chord("<G D Am C>")
+  .voicing()
+  .room(0.5)
+  .sound("sin")
+  .attack(0.1)
+  .decay(0.3)
+  .sustain(0.4)
+  .release(1)
+  .gain(0.2);
+
+$völlig_losgelöst: n("<[b d4] [ d4 [ c4 b ] a -  ] [c4 e4 ] [e4 d4] >")
+  .sound("gm_voice_oohs")
+  .scale("e:minor")
+  .distort("2.2:.3")
+  .room(0.5)
+  .roomsize(4);
+
 // Everything
 //all((x) => x.lpf(slider(1000, 0, 1000)));
+//

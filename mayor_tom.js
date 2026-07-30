@@ -1,4 +1,4 @@
-setCps(161 / 60 / 4);
+setCps(161 / 60 / 4)
 
 // prettier-ignore
 samples('github:mot4i/garden');
@@ -15,7 +15,7 @@ _$pat: stack(
   .lpf(slider(122.4, 0, 800))
   .lpenv(slider(1.16, 0, 5))
   .room(0.4)
-  .lpq(12);
+  .lpq(12)
 
 $voice: stack(
   n(
@@ -29,7 +29,7 @@ $voice: stack(
   .distort("2.2:.3")
   .room(0.5)
   .roomsize(4)
-  .sound("gm_voice_oohs");
+  .sound("gm_voice_oohs")
 
 $guitarrizz: n("< - - [ - - - - - - - - d5] - >")
   .scale("e:minor")
@@ -40,14 +40,14 @@ $guitarrizz: n("< - - [ - - - - - - - - d5] - >")
   .gain(0.5)
   .roomsize(2)
   .distort(0.4)
-  .sound("gm_distortion_guitar,gm_overdriven_guitar");
+  .sound("gm_distortion_guitar,gm_overdriven_guitar")
 
 _$drums: sound("bd:7 hh:7 sd:7 hh:7 bd:7 hh:7 sd:7 hh:7")
   .bank("garden")
   .gain("[0.15 0.6]*4")
-  .lpenv(2);
+  .lpenv(2)
 
-_$hehe: sound("-*10 sd:5  -*12").bank("garden").lpf(400).gain(0.2);
+_$hehe: sound("-*10 sd:5  -*12").bank("garden").lpf(400).gain(0.2)
 
 $bass: n("e1 e1 -  e1 - - e2 -")
   .scale("e:minor")
@@ -56,7 +56,7 @@ $bass: n("e1 e1 -  e1 - - e2 -")
   .room(0.6)
   .roomsize(7)
   .lpf(900)
-  .bpenv("<4 2 1 0 -1 -2 -4>/4");
+  .bpenv("<4 2 1 0 -1 -2 -4>/4")
 
 _$refrain: chord("<G D Am C>")
   .voicing()
@@ -66,14 +66,14 @@ _$refrain: chord("<G D Am C>")
   .decay(0.3)
   .sustain(0.4)
   .release(1)
-  .gain(0.2);
+  .gain(0.2)
 
 _$völlig_losgelöst: n("<[b d4] [ d4 [ c4 b ] a -  ] [c4 e4 ] [e4 d4] >")
   .sound("gm_voice_oohs")
   .scale("e:minor")
   .distort("2.2:.3")
   .room(0.5)
-  .roomsize(4);
+  .roomsize(4)
 
 // Everything
 //all((x) => x.lpf(slider(1000, 0, 1000)));

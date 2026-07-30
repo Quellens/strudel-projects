@@ -1,11 +1,11 @@
 // prettier-ignore
-samples('github:mot4i/garden');
+samples('github:mot4i/garden')
 // prettier-ignore
-samples('github:todepond/dirt-samples');
+samples('github:todepond/dirt-samples')
 // prettier-ignore
-samples('github:todepond/spicule');
+samples('github:todepond/spicule')
 // prettier-ignore
-samples('github:yaxu/clean-breaks');
+samples('github:yaxu/clean-breaks')
 
 /*
 

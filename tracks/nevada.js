@@ -1,7 +1,6 @@
 setCps(125 / 60 / 4)
 // prettier-ignore
 await import('https://glossing.dev/scripts.js')
-//
 
 // prettier-ignore
 window.kb = await midikeys('MPK mini Play mk3 MIDI 1')
@@ -26,8 +25,10 @@ $: midichan("1")
   ~ 67:4 ~ ~ 67:4 ~ ~ 65:3 ~ 72:3 ~ 70:3 ~ 72:3 ~ 70:3 ~
 >*16`.as("note:clip"),
   )
-  .lpf(400)
   .room(0.2)
+  .fm(5)
+  .fmh(2.3)
+  .lpf(600)
   .lpenv(1)
   .lprelease(0.3)
   .distort(1.0)
@@ -36,7 +37,8 @@ $: midichan("1")
 $: midichan("1")
   .s("sin")
   .n("3")
-  .clip("0.70")
+  .gain(0.2)
+  .hpf(500)
   .set.out(
     `<
   [67:0.69:8, 63:0.76:8, 60:0.75:8] ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~

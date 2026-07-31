@@ -8,7 +8,9 @@ samples('github:mot4i/garden')
 // prettier-ignore
 window.kb = await midikeys('MPK mini Play mk3 MIDI 1')
 
-$: midichan("1")
+// $: kb().s("piano:4").clip(0.6).gain(2)
+
+S$: midichan("1")
   .s("supersaw")
   .lpf(600)
   .lpenv(1.5)
@@ -72,3 +74,15 @@ $: clip("1")
   .hpf(100)
   .lpf(2200)
   ._spectrum({ height: 50, width: 700 })
+
+_$: midichan("1")
+  .s("piano")
+  .n("4")
+  .clip("0.60")
+  .gain("2")
+  .set.out(
+    `<
+  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+  ~ ~ ~ ~ ~ ~ ~ ~ 82:0.84:8  82:0.91:8 81:0.92:8 81:0.77:8 79:0.79:8 ~ 77:0.69:8 79:0.92:8
+>*16`.as("note:velocity:clip"),
+  )

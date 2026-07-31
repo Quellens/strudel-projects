@@ -6,18 +6,24 @@ samples('github:yaxu/clean-breaks');
 samples(
   {
     //prettier-ignore
-    jerkItOut: 'samples/jerkItOut/guitarRif.wav',
+    jerkItOut: '../samples/jerkItOut/guitarRif.wav',
   },
   //prettier-ignore
   'https://raw.githubusercontent.com/Quellens/strudel-projects/main/',
 );
 
-$aaa: note(
+_$aaa: note(
   "< [ [ 2 - [ 2 2 ] [ - 2 ] ] [ [4 - ] [ 4 4]  [ - 4] [ 1 1 ] ] ] [ [ 1 - - - ] - ] >",
 )
   .scale("b:major")
   .sound("gm_electric_guitar_jazz,gm_overdriven_guitar")
   .room(0.4);
+
+$bbb: n("<a#5,d#3,d>")
+  .scale("b:major")
+  .sound("sin")
+  .struct("- - - - - - [- - - x ] [ x ] x")
+  .slow(2);
 
 _$chords: chord("G#m B F# E")
   .slow(2)
@@ -37,6 +43,7 @@ _$voice: n(
   .s("gm_acoustic_bass")
   .lpf(2000)
   .room(0.5)
+  .gain(2)
   .fast(4)
   .clip(0.9)
   ._punchcard();

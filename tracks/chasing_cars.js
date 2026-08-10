@@ -1,1 +1,69 @@
-"https://open.spotify.com/intl-de/track/5v2igHeJioYnkFFBBCzQIB?si=43b58ca8c34f495c"
+setCps(158 / 60 / 4)
+
+// prettier-ignore
+// window.kb = await midikeys('MPK mini Play mk3 MIDI 1')
+
+// prettier-ignore
+await import('https://cdn.jsdelivr.net/gh/Quellens/strudel-projects@main/scripts/glossing.js')
+
+// $: kb().s("gm_pad_halo:7,gm_pad_halo:6").clip(1)
+// $: kb().s("gm_pad_halo:7,gm_pad_halo:6").clip(1)
+
+$: note("<c4*2!8 b3*2!8 f3*2!8 c3*2!8>")
+  .s("gm_acoustic_guitar_nylon")
+  .n(8)
+  .fast(4)
+  .lpf(sine.segment(2000).range(300, 1500).slow(2))
+  .room(0.8)
+  .roomsize(4)
+
+$: midichan("1")
+  .s("sine")
+  .n("4")
+  .distort(1)
+  .hcutoff("200")
+  .room("0.90")
+  .postgain("1.5")
+  .set.out(`<36 43 41 36>`.as("note"))
+  .slow(2)
+  .orbit(2)
+
+$: midichan("1")
+  .s("saw")
+  .n("6")
+  .distort(2)
+  .room("0.1")
+  .postgain(0.6)
+  .set.out(`<36 43 41 36>`.as("note"))
+  .slow(2)
+  .orbit(2)
+
+$: s("bd")
+  .n(1)
+  .beat("0,10", 16)
+  .bank("tr909")
+  .room(0.2)
+  .lpf(1500)
+  .postgain(0.5)
+  .duck("2")
+  .duckattack(0.2)
+  .flux(press)
+
+$: s("hh")
+  .n(2)
+  .beat("12,24,28,32", 32)
+  .bank("tr909")
+  .room(0.3)
+  .lpf(1000)
+  .postgain(0.5)
+
+$: s("cp").beat("4,12", 16).bank("rz1").postgain(0.5)
+
+_$: s("sin!128")
+  .lpf(2000)
+  .fm(time.mod(32))
+  .fmh(time.mod(32))
+  .rib(6, 4)
+  .slow(2)
+  .postgain(0.01)
+  ._scope()

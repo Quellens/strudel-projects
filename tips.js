@@ -18,4 +18,14 @@ $: s("riffin/2").fit()
 .jux(rev)
 
 
+// building up
+$: s("sin!128")
+  .lpf(2000)
+  .fm(time.mod(32))
+  .fmh(time.mod(32))
+  .rib(6, 4)
+  .slow(2)
+  .postgain(0.2)
+  ._spectrum()
+
  * */

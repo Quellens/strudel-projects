@@ -1,7 +1,7 @@
 setCps(188 / 60 / 4)
 
 // prettier-ignore
-window.kb = await midikeys('MPK mini Play mk3 MIDI 1')
+// window.kb = await midikeys('MPK mini Play mk3 MIDI 1')
 
 // prettier-ignore
 await import('https://cdn.jsdelivr.net/gh/Quellens/strudel-projects@main/scripts/glossing.js')
@@ -10,9 +10,9 @@ $: s("bd:17").beat("0,10", 16)
 
 $: s("sd:11").beat("4,12,< - 14>,< - - - 15>", 16)
 
-$: kb().s("gm_synth_bass_1").clip(0.3).postgain(2)
+// $: kb().s("gm_synth_bass_1").clip(0.3).postgain(2)
 
-$: s("saw,sin")
+$: s("gm_epiano1")
   .set.out(
     `<
   68:4 ~ ~ ~ 65:4 ~ ~ ~ 68:4 ~ ~ ~ 65:4 ~ ~ ~
@@ -25,15 +25,13 @@ $: s("saw,sin")
   70:2 ~ 68:2 ~ 70:2 ~ 71:2 ~ 71:2 ~ 70:2 ~ 68:2 ~ 65:2  ~
 >*16`.as("note:clip"),
   )
-  .lpf(2000)
-  .lpa(0.3)
-  .fm(1)
-  .lpenv(1)
+  .n(24)
+  .room(0.4)
   .postgain(1.5)
 
 $: velocity("1")
   .midichan("1")
-  .s("gm_synth_bass_1")
+  .s("saw")
   .set.out(
     `<
    <51 53>*16 
@@ -44,8 +42,8 @@ $: velocity("1")
   )
   .slow(2)
   .trans(-12)
-  .lpenv(3)
+  .room(0.3)
   .lpf(1000)
-  .lpq(2)
-  .lpa(1.5)
-  .postgain(0.8)
+  .lpq(5)
+
+  .postgain(0.7)

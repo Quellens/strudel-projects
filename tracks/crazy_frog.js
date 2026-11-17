@@ -52,3 +52,18 @@ $bass: midichan("1")
   41:4 ~ ~ ~ ~ ~ ~ ~ ~ 53:1 48:2 ~ 46:2 ~ 44:2 ~
 >*16`.as("note:clip"),
   )
+
+$bridge: midichan("1")
+  .s("gm_fx_crystal")
+  .set.out(
+    `<
+  77:4 ~ ~ 75:4 ~ ~ ~ 72:4
+  ~ ~ ~ 70:4 ~ ~ 68:3 ~
+  65:5 ~ ~ ~ ~ ~ ~ ~
+  ~ ~ ~ ~ ~ ~ ~ ~
+>*8`.as("note:clip"),
+  )
+  .trans(12)
+  .room(0.3)
+  .release(0.6)
+  .postgain(0.67)

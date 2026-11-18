@@ -6,9 +6,22 @@ window.kb = await midikeys('MPK mini Play mk3 MIDI 1')
 // prettier-ignore
 await import('https://cdn.jsdelivr.net/gh/Quellens/strudel-projects@main/scripts/glossing.js')
 
-$shaker: s("yamahary30_sh*8").postgain(0.1).delay(0.1)
-$bd: s("bd:17").beat("0,10", 16).postgain(0.3)
-$sd: s("sd:11").beat("4,12,< - 14>,< - - - 15>", 16).postgain(0.3)
+const PHASE = 1
+
+$shaker: s("yamahary30_sh*8")
+  .gain(0.1)
+  .delay(0.1)
+  .postgain(PHASE !== 1)
+
+$bd: s("bd:17")
+  .beat("0,10", 16)
+  .gain(0.3)
+  .postgain(PHASE === 3 || PHASE === 4)
+
+$sd: s("sd:11")
+  .beat("4,12,< - 14>,< - - - 15>", 16)
+  .gain(0.3)
+  .postgain(PHASE === 4 || PHASE === 5)
 
 $melody: s("gm_synth_brass_1")
   .n("3")
@@ -20,10 +33,11 @@ $melody: s("gm_synth_brass_1")
   ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 >*16`.as("note:clip"),
   )
-  .postgain(0.8)
   .trans(1)
   .room(0.3)
+  .gain(0.8)
   .release(0.2)
+  .postgain(PHASE === 1 || PHASE == 4)
 
 $vibes: s("gm_synth_brass_2")
   .n(5)
@@ -37,13 +51,14 @@ $vibes: s("gm_synth_brass_2")
   )
   .room(0.2)
   .clip(1.2)
-  .postgain(0.45)
   .delay(0.07)
+  .gain(0.45)
+  .postgain(PHASE === 5)
 
 $bass: midichan("1")
   .s("piano")
   .n(2)
-  .postgain(0.5)
+  .gain(0.5)
   .set.out(
     `<
   41:4 ~ ~ ~ 53:3 ~ ~ 39:2 ~ 51:1 36:2 ~ 48:2 ~ 39:2 ~
@@ -52,6 +67,7 @@ $bass: midichan("1")
   41:4 ~ ~ ~ ~ ~ ~ ~ ~ 53:1 48:2 ~ 46:2 ~ 44:2 ~
 >*16`.as("note:clip"),
   )
+  .postgain(PHASE !== 1)
 
 $bridge: midichan("1")
   .s("gm_fx_crystal")
@@ -66,4 +82,6 @@ $bridge: midichan("1")
   .trans(12)
   .room(0.3)
   .release(0.6)
-  .postgain(0.67)
+  .gain(0.67)
+  .postgain(0)
+  .postgain(PHASE === 7)

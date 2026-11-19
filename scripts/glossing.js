@@ -1876,7 +1876,7 @@ window.arrange2 = (total, ...parts) => {
 @param {number} duration seconds to record
 @param {number} grid quantization grid
 @param {boolean} withVelocity include velocity in the transcription (default: false)
-@param {boolean} autoGrid shrink the grid to the smallest possible size (default: true)
+@param {boolean} autoGrid shrink the grid to the smallest possible size, snapping steps within one tick (default: true)
 
 @example
 $: s("saw").seg(8).n(irand(8)).scale("F:minor")
@@ -1900,7 +1900,6 @@ Pattern.prototype.scribe = function (
   const transEnd = _findParenMatch(code, transStart)
   const snapStep = Fraction(1).div(grid)
   const quantizeStep = (value) => Fraction(value).div(snapStep).round()
-  const gcd = (a, b) => (b ? gcd(b, a % b) : a)
   const formatValue = (value) => {
     if (typeof value === "number") {
       return Number.isInteger(value) ? String(value) : String(value.toFixed(2))
@@ -1944,13 +1943,27 @@ Pattern.prototype.scribe = function (
       if (!parts.length) return haps
       let factor = 1
       if (autoGrid) {
-        factor = parts.reduce(
-          (acc, part) =>
-            gcd(acc, gcd(part.beginStep.valueOf(), part.durStep.valueOf())),
-          totalSteps,
-        )
-        // keep the resulting grid >= 1 (a divisor of factor still divides all steps)
-        factor = Math.min(factor, grid)
+        // largest divisor of grid that every step lands on within one tick
+        const snapTo = (step, div) => Math.round(step / div) * div
+        const fits = (div) =>
+          grid % div === 0 &&
+          totalSteps % div === 0 &&
+          parts.every(
+            (part) =>
+              Math.abs(
+                part.beginStep.valueOf() -
+                  snapTo(part.beginStep.valueOf(), div),
+              ) <= 1 &&
+              Math.abs(
+                part.durStep.valueOf() - snapTo(part.durStep.valueOf(), div),
+              ) <= 1,
+          )
+        for (let div = grid; div > factor; div--) {
+          if (fits(div)) {
+            factor = div
+            break
+          }
+        }
       }
       const outGrid = grid / factor
       const outTotalSteps = totalSteps / factor
@@ -1966,10 +1979,18 @@ Pattern.prototype.scribe = function (
         .slice()
         .sort((a, b) => a.beginStep.sub(b.beginStep).valueOf())
         .forEach((part) => {
-          const step = part.beginStep.valueOf() / factor
+          const beginStep = Math.min(
+            totalSteps - factor,
+            Math.round(part.beginStep.valueOf() / factor) * factor,
+          )
+          const durStep = Math.max(
+            factor,
+            Math.round(part.durStep.valueOf() / factor) * factor,
+          )
+          const step = beginStep / factor
           if (step < 0 || step >= steps.length) return
           const values = varyingKeys.map((key) => formatValue(part.value[key]))
-          values.push(String(part.durStep.valueOf() / factor))
+          values.push(String(durStep / factor))
           steps[step].push(values.join(":"))
         })
       const stepStrings = steps.map((step) => {

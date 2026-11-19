@@ -1876,6 +1876,7 @@ window.arrange2 = (total, ...parts) => {
 @param {number} duration seconds to record
 @param {number} grid quantization grid
 @param {boolean} withVelocity include velocity in the transcription (default: false)
+@param {boolean} autoGrid shrink the grid to the smallest possible size (default: true)
 
 @example
 $: s("saw").seg(8).n(irand(8)).scale("F:minor")
@@ -1887,6 +1888,7 @@ Pattern.prototype.scribe = function (
   duration = 4,
   grid = 16,
   withVelocity = false,
+  autoGrid = true,
 ) {
   const start = Math.ceil(getTime())
   const end = start + duration
@@ -1898,6 +1900,7 @@ Pattern.prototype.scribe = function (
   const transEnd = _findParenMatch(code, transStart)
   const snapStep = Fraction(1).div(grid)
   const quantizeStep = (value) => Fraction(value).div(snapStep).round()
+  const gcd = (a, b) => (b ? gcd(b, a % b) : a)
   const formatValue = (value) => {
     if (typeof value === "number") {
       return Number.isInteger(value) ? String(value) : String(value.toFixed(2))
@@ -1938,6 +1941,19 @@ Pattern.prototype.scribe = function (
     }
     if (!didUpdate && getTime() >= end) {
       const totalSteps = quantizeStep(duration).max(Fraction(1)).valueOf()
+      if (!parts.length) return haps
+      let factor = 1
+      if (autoGrid) {
+        factor = parts.reduce(
+          (acc, part) =>
+            gcd(acc, gcd(part.beginStep.valueOf(), part.durStep.valueOf())),
+          totalSteps,
+        )
+        // keep the resulting grid >= 1 (a divisor of factor still divides all steps)
+        factor = Math.min(factor, grid)
+      }
+      const outGrid = grid / factor
+      const outTotalSteps = totalSteps / factor
       const constantKeys = keyOrder.filter((key) => {
         const first = parts[0].value[key]
         return parts.every(
@@ -1945,15 +1961,15 @@ Pattern.prototype.scribe = function (
         )
       })
       const varyingKeys = keyOrder.filter((key) => !constantKeys.includes(key))
-      const steps = Array.from({ length: totalSteps }, () => [])
+      const steps = Array.from({ length: outTotalSteps }, () => [])
       parts
         .slice()
         .sort((a, b) => a.beginStep.sub(b.beginStep).valueOf())
         .forEach((part) => {
-          const step = part.beginStep.valueOf()
+          const step = part.beginStep.valueOf() / factor
           if (step < 0 || step >= steps.length) return
           const values = varyingKeys.map((key) => formatValue(part.value[key]))
-          values.push(String(part.durStep.valueOf()))
+          values.push(String(part.durStep.valueOf() / factor))
           steps[step].push(values.join(":"))
         })
       const stepStrings = steps.map((step) => {
@@ -1962,11 +1978,11 @@ Pattern.prototype.scribe = function (
         return `[${step.join(", ")}]`
       })
       const rows = []
-      for (let i = 0; i < stepStrings.length; i += grid) {
-        rows.push(`  ${stepStrings.slice(i, i + grid).join(" ")}`)
+      for (let i = 0; i < stepStrings.length; i += outGrid) {
+        rows.push(`  ${stepStrings.slice(i, i + outGrid).join(" ")}`)
       }
       const mapping = [...varyingKeys, "clip"].join(":")
-      const miniPattern = `\`<\n${rows.join("\n")}\n>*${grid}\`.as(${JSON.stringify(mapping)})`
+      const miniPattern = `\`<\n${rows.join("\n")}\n>*${outGrid}\`.as(${JSON.stringify(mapping)})`
       const constantPattern = constantKeys
         .map((key) => `${key}("${formatValue(parts[0].value[key])}")`)
         .join(".")

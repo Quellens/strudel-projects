@@ -1873,13 +1873,21 @@ window.arrange2 = (total, ...parts) => {
 /* TRANSCRIBE YOUR PATTERN
 (with quantization)
 
+@param {number} duration seconds to record
+@param {number} grid quantization grid
+@param {boolean} withVelocity include velocity in the transcription (default: false)
+
 @example
 $: s("saw").seg(8).n(irand(8)).scale("F:minor")
   .scribe(4, 16)
 
 */
 // mini-off
-Pattern.prototype.scribe = function (duration = 4, grid = 16) {
+Pattern.prototype.scribe = function (
+  duration = 4,
+  grid = 16,
+  withVelocity = false,
+) {
   const start = Math.ceil(getTime())
   const end = start + duration
   const mirror = window.strudelMirror
@@ -1909,6 +1917,9 @@ Pattern.prototype.scribe = function (duration = 4, grid = 16) {
         const begin = hap.whole.begin
         if (begin < start || begin >= end) continue
         const { duration, midikey, ...filtered } = hap.value
+        if (!withVelocity) {
+          delete filtered.velocity
+        }
         const partKey = `${Fraction(begin).show()}|${Fraction(hap.whole.end).show()}|${JSON.stringify(filtered)}`
         if (seenParts.has(partKey)) continue
         seenParts.add(partKey)
